@@ -28,7 +28,9 @@ Route::get('/lessons/{id}', [LessonController::class, 'show']);
 Route::post('/lessons/viewed', [LessonController::class, 'viewed']);
 
 Route::get('supports', [SupportController::class, 'index']);
+Route::post('supports', [SupportController::class, 'store']);
 
-Route::get('/', function () {
-    return response()->json(['message' => 'Tiago']);
-});
+Route::post('supports/{id}/replies', [SupportController::class, 'createReply']);
+
+
+

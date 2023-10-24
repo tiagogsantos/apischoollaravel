@@ -30,13 +30,43 @@ class SupportRepository
                     $query->where('description', 'LIKE', "%{$filter}%");
                 }
             })
+            ->orderBy('updated_at')
             ->get();
     }
 
-    private function getUserAuth ()
+    public function createNewSupport(array $data): Support
+    {
+        $support = $this->getUserAuth()
+            ->supports()
+            ->create([
+                'lesson_id' => $data['lesson'],
+                'description' => $data['description'],
+                'status' => $data['status']
+            ]);
+
+        return $support;
+    }
+
+    public function createReplyToSupportid(string $suportId, array $data)
+    {
+        $user = $this->getUserAuth();
+
+        return $this->getSupport($suportId)
+            ->replies()
+            ->create([
+                'user_id' => $user->id,
+                'description' => $data['description'],
+            ]);
+    }
+
+    public function getSupport(string $id)
+    {
+        return $this->entity->findOrFail($id);
+    }
+
+    private function getUserAuth()
     {
         //return auth()->user()->first();
-
         return User::first();
     }
 }
